@@ -69,7 +69,7 @@ public class DynamicObstacle : MonoBehaviour
         else
             updateRotation();
 
-        Debug.Log(timeOffset);
+        
     }
 
     void updateRotation()
