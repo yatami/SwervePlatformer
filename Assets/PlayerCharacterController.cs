@@ -28,11 +28,11 @@ public class PlayerCharacterController : Singleton<PlayerCharacterController>
     // Update is called once per frame
     void Update()
     {
-        Debug.Log(rotationLerper + "  axisraw : " + Input.GetAxisRaw("Horizontal"));
+       // Debug.Log(rotationLerper + "  axisraw : " + Input.GetAxisRaw("Horizontal"));
         if (Input.GetButton("Horizontal"))
         {
             newXPos = Mathf.Clamp(transform.position.x + Input.GetAxisRaw("Horizontal") * xSpeed, startXPos + clampVals.x, startXPos + clampVals.y);
-
+           
             //Rotate
             if ((transform.rotation.y >= 0 && (Input.GetAxisRaw("Horizontal") == 1)) || (transform.rotation.y <= 0 && Input.GetAxisRaw("Horizontal") == -1))
             {
@@ -70,12 +70,16 @@ public class PlayerCharacterController : Singleton<PlayerCharacterController>
 
     private void FixedUpdate()
     {
-      
-       // rb.MovePosition(new Vector3(Mathf.Lerp(transform.position.x, newXPos, lerpSpeed * Time.fixedDeltaTime), rb.velocity.y, transform.position.z + forwardSpeed * Time.fixedDeltaTime));
+        //rb.velocity = new Vector3(newXPos ,rb.velocity.y, forwardSpeed);
+        Debug.Log(rb.velocity);
+        rb.MovePosition(new Vector3(Mathf.Lerp(transform.position.x, newXPos, lerpSpeed * Time.fixedDeltaTime), rb.velocity.y, transform.position.z + forwardSpeed * Time.fixedDeltaTime));
         //rb.MovePosition(new Vector3(newXPos, rb.velocity.y, transform.position.z + forwardSpeed * Time.fixedDeltaTime));
         //rb.MovePosition(new Vector3(transform.position.x - 0.05f * Time.fixedDeltaTime, transform.position.y, transform.position.z));
 
     }
+
+ 
+
 
     private void RotateCharacter(bool toRight, float rotator)
     {

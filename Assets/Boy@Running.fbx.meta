@@ -1,15 +1,12 @@
 fileFormatVersion: 2
-guid: 0e65e00a4ee05b8458ef5974c125e8b7
+guid: 9e6b44ff576bf67449472eae8ab710ee
 ModelImporter:
   serializedVersion: 19301
-  internalIDToNameTable: []
-  externalObjects:
+  internalIDToNameTable:
   - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: clothes
-    second: {fileID: 8980270400253499179, guid: 0e65e00a4ee05b8458ef5974c125e8b7,
-      type: 3}
+      74: -203655887218126122
+    second: mixamo.com
+  externalObjects: {}
   materials:
     materialImportMode: 1
     materialName: 0

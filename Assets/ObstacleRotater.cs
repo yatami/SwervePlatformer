@@ -20,10 +20,6 @@ public class ObstacleRotater : MonoBehaviour
     {
        
             transform.Rotate(movementAxis.x * rotationSpeed * Time.deltaTime, movementAxis.y * rotationSpeed * Time.deltaTime, movementAxis.z * rotationSpeed * Time.deltaTime);
-        
-       
-
-
     }
 
     void FixedUpdate()

@@ -37,10 +37,15 @@ public class RespawnSystem : Singleton<RespawnSystem>
     IEnumerator respawnAfterDelay()
     {
         yield return new WaitForSeconds(3f);
-        animRef.playRunAnim();
-        animRef.stopDeadAnim();
-        characterContRef.enabled = true;
+       
+       
+        
         gameObject.transform.position = respawnPoint;
+        yield return new WaitForSeconds(0.1f);
+        animRef.stopDeadAnim();
+        animRef.playRunAnim();
+        
+        characterContRef.enabled = true;
         characterCam.Priority = 1;
         deathCam.Priority = 0;
         yield break;
