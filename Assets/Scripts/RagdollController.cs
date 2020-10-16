@@ -2,14 +2,17 @@
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
+using UnityEngine.AI;
 
-public class RagdollController : Singleton<RagdollController>
+public class RagdollController : MonoBehaviour
 {
     Rigidbody rb;
     Collider collider;
     PlayerCharacterController characterContRef;
+    AICharacterController aiControllerRef;
     Animator animRef;
     RespawnSystem respawnRef;
+    NavMeshAgent navMeshRef;
 
     private GameObject pelvis;
     private Vector3 hitPos;
@@ -17,6 +20,7 @@ public class RagdollController : Singleton<RagdollController>
     private Vector3[] rigPos;
     private Vector3[] rigRot;
     private bool triggered;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -24,8 +28,21 @@ public class RagdollController : Singleton<RagdollController>
         collider = gameObject.GetComponent<Collider>();
         characterContRef = PlayerCharacterController.request();
         animRef = gameObject.GetComponent<Animator>();
-        respawnRef = RespawnSystem.request();
-        pelvis = GameObject.FindGameObjectWithTag("PelvisBone");
+
+        Transform[] trans = gameObject.GetComponentsInChildren<Transform>();
+        foreach(Transform t in trans)
+        {
+            if(t.CompareTag("PelvisBone"))
+            {
+                pelvis = t.gameObject;
+            }
+        }
+        if(gameObject.CompareTag("AI"))
+        {
+            navMeshRef = gameObject.GetComponent<NavMeshAgent>();
+            aiControllerRef = gameObject.GetComponent<AICharacterController>();
+        }
+
         deActivateRagdoll();
     }
 
@@ -64,6 +81,15 @@ public class RagdollController : Singleton<RagdollController>
 
     public void activateRagdoll()
     {
+
+        if (gameObject.CompareTag("Player"))
+        {
+            characterContRef.enabled = false;
+        }
+        else if (gameObject.CompareTag("AI"))
+        {
+            aiControllerRef.deActivateNavMesh();
+        }
         Debug.Log(curretNormal);
         foreach (Rigidbody rbs in gameObject.GetComponentsInChildren<Rigidbody>())
         {
@@ -76,13 +102,14 @@ public class RagdollController : Singleton<RagdollController>
         }
         rb.isKinematic = true;
         collider.enabled = false;
-        characterContRef.enabled = false;
         animRef.enabled = false;
 
-       StartCoroutine(triggerGetUp());
+        StartCoroutine(triggerGetUp());
     }
     public void deActivateRagdoll()
     {
+
+
         foreach (Rigidbody rbs in gameObject.GetComponentsInChildren<Rigidbody>())
         {
             rbs.isKinematic = true;
@@ -93,8 +120,16 @@ public class RagdollController : Singleton<RagdollController>
         }
         rb.isKinematic = false;
         collider.enabled = true;
-        characterContRef.enabled = true;
         animRef.enabled = true;
+        if (gameObject.CompareTag("Player"))
+        {
+            characterContRef.enabled = true;
+        }
+        else if (gameObject.CompareTag("AI"))
+        {
+            aiControllerRef.activateNavMesh();
+        }
+
     }
 
     IEnumerator triggerGetUp()

@@ -3,13 +3,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class RespawnSystem : Singleton<RespawnSystem>
+public class RespawnSystem : MonoBehaviour
 {
     [SerializeField] CinemachineVirtualCamera characterCam;
     [SerializeField] CinemachineVirtualCamera deathCam;
 
     PlayerCharacterController characterContRef;
-    PlayerAnimationController animRef;
+    AICharacterController aiControllerRef;
+    AnimationController animRef;
 
     private Vector3 respawnPoint;
     
@@ -18,9 +19,16 @@ public class RespawnSystem : Singleton<RespawnSystem>
     void Start()
     {
         respawnPoint = gameObject.transform.position;
-        deathCam.Follow = null;
         characterContRef = PlayerCharacterController.request();
-        animRef = PlayerAnimationController.request();
+        animRef = gameObject.GetComponent<AnimationController>();
+        if(gameObject.CompareTag("AI"))
+        {
+            aiControllerRef = gameObject.GetComponent<AICharacterController>();
+        }
+        else
+        {
+            deathCam.Follow = null;
+        }
     }
 
     // Update is called once per frame
@@ -28,9 +36,17 @@ public class RespawnSystem : Singleton<RespawnSystem>
 
     public void respawnCharacter()
     {
-        characterContRef.enabled = false;
-        characterCam.Priority = 0;
-        deathCam.Priority = 1;
+        if (gameObject.CompareTag("AI"))
+        {
+            aiControllerRef.deActivateNavMesh();
+        }
+        else
+        {
+            characterContRef.enabled = false;
+            characterCam.Priority = 0;
+            deathCam.Priority = 1;
+        }
+       
         StartCoroutine(respawnAfterDelay());
     }
 
@@ -41,9 +57,19 @@ public class RespawnSystem : Singleton<RespawnSystem>
         gameObject.transform.position = respawnPoint;
         animRef.stopDeadAnim();
         animRef.playRunAnim();
-        characterContRef.enabled = true;
-        characterCam.Priority = 1;
-        deathCam.Priority = 0;
+
+        if (gameObject.CompareTag("AI"))
+        {
+            aiControllerRef.activateNavMesh();
+        }
+        else
+        {
+            characterContRef.enabled = true;
+            characterCam.Priority = 1;
+            deathCam.Priority = 0;
+        }
+
+      
         yield break;
     }
 }

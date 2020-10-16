@@ -9,6 +9,7 @@ TagManager:
   - FinishLine
   - Rotator
   - PelvisBone
+  - AI
   layers:
   - Default
   - TransparentFX

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerAnimationController : Singleton<PlayerAnimationController>
+public class AnimationController : MonoBehaviour
 {
     Animator animRef;
     RespawnSystem respawnRef;
@@ -16,7 +16,7 @@ public class PlayerAnimationController : Singleton<PlayerAnimationController>
         characterContRef = PlayerCharacterController.request();
         rb = gameObject.GetComponent<Rigidbody>();
         animRef = gameObject.GetComponent<Animator>();
-        respawnRef = RespawnSystem.request();
+        respawnRef = gameObject.GetComponent<RespawnSystem>();
     }
 
     // Update is called once per frame
@@ -44,6 +44,15 @@ public class PlayerAnimationController : Singleton<PlayerAnimationController>
         rb.isKinematic = false;
         canDie = true;
         yield break;
+    }
+
+    public void playIdleToRun()
+    {
+        animRef.SetBool("shouldStartTheGame", true);
+    }
+    public void playRunToStop()
+    {
+        animRef.SetBool("shouldFinish", true);
     }
 
     public void playRunAnim()

@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 6693804950641434423}
   - component: {fileID: 4365012444181456639}
   - component: {fileID: 8501004226234524168}
+  - component: {fileID: 1487410013321323726}
   m_Layer: 0
   m_Name: RotatorStick
   m_TagString: Untagged
@@ -110,6 +111,22 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 7554973115994324875, guid: 0212b115ff98bc841ad6f2193e38b5eb, type: 3}
+--- !u!208 &1487410013321323726
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5180776001530265314}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.023000002, y: 0.018000001, z: 0.023000002}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 0
+  m_Center: {x: 0, y: -0.016, z: 0}
+  m_TimeToStationary: 0
 --- !u!1 &7209221484235701073
 GameObject:
   m_ObjectHideFlags: 0
@@ -122,6 +139,7 @@ GameObject:
   - component: {fileID: 6406449118138658382}
   - component: {fileID: 9154886542896142980}
   - component: {fileID: 4592956645934256849}
+  - component: {fileID: 6980117520936651873}
   m_Layer: 0
   m_Name: RotatingStick
   m_TagString: Rotator
@@ -204,3 +222,19 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: -2457439952264339840, guid: 33fbb30a094e3e940a024b7da18f0fe6, type: 3}
+--- !u!208 &6980117520936651873
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7209221484235701073}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.0050000004, y: 0.0050000004, z: 0.053000003}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 0
+  m_Center: {x: 0, y: 0, z: 0.075}
+  m_TimeToStationary: 0

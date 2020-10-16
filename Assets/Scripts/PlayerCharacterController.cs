@@ -1,9 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class PlayerCharacterController : Singleton<PlayerCharacterController>
 {
+    [HideInInspector] public UnityEvent startGame;
+
     [SerializeField] float forwardSpeed = 10f;
     [SerializeField] float lerpSpeed = 5f;
     [SerializeField] float rotationLerpSpeed = 5f;
@@ -12,18 +15,25 @@ public class PlayerCharacterController : Singleton<PlayerCharacterController>
 
     PaintController paintContRef;
     SwipeController swipeContRef;
+    AnimationController animationController;
 
     private Rigidbody rb;
     private float newXPos;
     private float startXPos;
     private float rotationLerper;
     private float startYRot;
+    private bool gameHasStarted;
 
 
     // Start is called before the first frame update
     void Start()
     {
+        if(startGame == null)
+        {
+            startGame = new UnityEvent();
+        }
         swipeContRef = gameObject.GetComponent<SwipeController>();
+        animationController = gameObject.GetComponent<AnimationController>();
         paintContRef = PaintController.request();
         rb = gameObject.GetComponent<Rigidbody>();
         startXPos = transform.position.x;
@@ -33,18 +43,26 @@ public class PlayerCharacterController : Singleton<PlayerCharacterController>
     // Update is called once per frame
     void Update()
     {
-       
-
-        if (Input.GetMouseButton(0))
+        if (Input.GetMouseButtonDown(0))
         {
+            if(!gameHasStarted)
+            {
+                startGame.Invoke();
+                gameHasStarted = true;
+                animationController.playIdleToRun();
+            }
+        }
+
+            if (Input.GetMouseButton(0))
+        {
+            
             swipeContRef.CalculateDistance(Input.mousePosition);
             newXPos = Mathf.Clamp(transform.position.x + swipeContRef.normalizedDistance * xSpeed, startXPos + clampVals.x, startXPos + clampVals.y);
            
-
             //Rotate
             if ((transform.rotation.y >= 0 && (swipeContRef.normalizedDistance >= 0.1f)) || (transform.rotation.y <= 0 && swipeContRef.normalizedDistance <= -0.1f))
             {
-
+               
                 rotationLerper += Time.deltaTime * rotationLerpSpeed;
                 if (rotationLerper > 1)
                 {
@@ -54,6 +72,7 @@ public class PlayerCharacterController : Singleton<PlayerCharacterController>
             }
             else
             {
+               
                 rotationLerper -= Time.deltaTime * rotationLerpSpeed;
                 if (rotationLerper < 0)
                 {
@@ -65,7 +84,7 @@ public class PlayerCharacterController : Singleton<PlayerCharacterController>
         else
         {
             newXPos = transform.position.x;
-
+            
             //Rotate
             rotationLerper -= Time.deltaTime * rotationLerpSpeed;
             if (rotationLerper < 0)
@@ -74,57 +93,21 @@ public class PlayerCharacterController : Singleton<PlayerCharacterController>
             }
             RotateCharacter(transform.rotation.y > 0, rotationLerper, swipeContRef.normalizedDistance * 30);
         }
-
-
-        // Debug.Log(rotationLerper + "  axisraw : " + Input.GetAxisRaw("Horizontal"));
-        /*if (Input.GetButton("Horizontal"))
-        {
-            newXPos = Mathf.Clamp(transform.position.x + Input.GetAxisRaw("Horizontal") * xSpeed, startXPos + clampVals.x, startXPos + clampVals.y);
-           
-            //Rotate
-            if ((transform.rotation.y >= 0 && (Input.GetAxisRaw("Horizontal") == 1)) || (transform.rotation.y <= 0 && Input.GetAxisRaw("Horizontal") == -1))
-            {
-                Debug.Log("executes");
-               rotationLerper += Time.deltaTime * rotationLerpSpeed;
-                if (rotationLerper > 1)
-                {
-                    rotationLerper = 1;
-                }
-                RotateCharacter(Input.GetAxisRaw("Horizontal") == 1, rotationLerper);
-            }
-            else
-            {
-                rotationLerper -= Time.deltaTime * rotationLerpSpeed;
-                if (rotationLerper < 0)
-                {
-                    rotationLerper = 0;
-                }
-                RotateCharacter(transform.rotation.y > 0, rotationLerper);
-            }
-           
-        }
-        else
-        {
-            newXPos = transform.position.x;
-             //Rotate
-             rotationLerper -= Time.deltaTime * rotationLerpSpeed;
-            if(rotationLerper < 0)
-            {
-                rotationLerper = 0;
-            }
-            RotateCharacter(transform.rotation.y > 0, rotationLerper);
-        }*/
     }
 
     private void FixedUpdate()
     {
-        //rb.velocity = new Vector3(newXPos ,rb.velocity.y, forwardSpeed);
-     
-        rb.MovePosition(new Vector3(Mathf.Lerp(transform.position.x, newXPos, lerpSpeed * Time.fixedDeltaTime), rb.velocity.y, transform.position.z + forwardSpeed * Time.fixedDeltaTime));
-        //rb.MovePosition(new Vector3(newXPos, rb.velocity.y, transform.position.z + forwardSpeed * Time.fixedDeltaTime));
-        //rb.MovePosition(new Vector3(transform.position.x - 0.05f * Time.fixedDeltaTime, transform.position.y, transform.position.z));
+       if(gameHasStarted)
+        {
+            rb.MovePosition(new Vector3(Mathf.Lerp(transform.position.x, newXPos, lerpSpeed * Time.fixedDeltaTime), rb.velocity.y, transform.position.z + forwardSpeed * Time.fixedDeltaTime));
+        }
 
+     
+            transform.rotation = Quaternion.Euler(0, 30, 0);
+     
     }
+      
+       
 
 
     private void OnTriggerEnter(Collider other)
@@ -133,19 +116,20 @@ public class PlayerCharacterController : Singleton<PlayerCharacterController>
         {
             rb.isKinematic = true;
             paintContRef.activatePaintGame();
+            animationController.playRunToStop();
             //play finish anim and show effects
         }
     }
 
+    // find a workaround for characters rotation
+
     private void RotateCharacter(bool toRight, float rotator , float degree)
     {
-        if(toRight)
-        {
-            transform.rotation = Quaternion.Euler(0, Mathf.Lerp(startYRot, degree, rotator), 0);
-        }
-        else
-        {
-            transform.rotation = Quaternion.Euler(0, Mathf.Lerp(startYRot, degree, rotator), 0);
-        }
+
+        transform.rotation = Quaternion.Euler(0, Mathf.Lerp(startYRot, degree, rotator), 0);
+        /* Quaternion deltaRot = Quaternion.Euler(rb.rotation.x, Mathf.Lerp(startYRot, degree, rotator),rb.rotation.z);
+              rb.MoveRotation(rb.rotation * deltaRot);*/
+
+
     }
 }
