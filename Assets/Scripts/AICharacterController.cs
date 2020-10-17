@@ -9,6 +9,7 @@ public class AICharacterController : MonoBehaviour
     NavMeshAgent navMeshRef;
     PlayerCharacterController playerRef;
     AnimationController animRef;
+    Rigidbody rb;
 
     private bool gameIsStarted;
     private Vector3 targetPos;
@@ -19,7 +20,9 @@ public class AICharacterController : MonoBehaviour
         animRef = gameObject.GetComponent<AnimationController>();
         playerRef.startGame.AddListener(gameStarted);
         targetPos = GameObject.FindGameObjectWithTag("FinishLine").transform.position;
+        targetPos.x = gameObject.transform.position.x;
         navMeshRef = gameObject.GetComponent<NavMeshAgent>();
+        rb = gameObject.GetComponent<Rigidbody>();
     }
 
     private void gameStarted()
@@ -33,7 +36,15 @@ public class AICharacterController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-       
+        Debug.Log(navMeshRef.velocity);
+    }
+
+    private void FixedUpdate()
+    {
+        if (gameIsStarted)
+        {
+            navMeshRef.velocity = new Vector3(navMeshRef.desiredVelocity.x, 0, navMeshRef.speed);
+        }
     }
 
     public void activateNavMesh()
@@ -48,5 +59,16 @@ public class AICharacterController : MonoBehaviour
     public void deActivateNavMesh()
     {
         navMeshRef.enabled = false;
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if(other.CompareTag("FinishLine"))
+        {
+            rb.isKinematic = true;
+            deActivateNavMesh();
+            animRef.playRunToStop();
+           
+        }
     }
 }

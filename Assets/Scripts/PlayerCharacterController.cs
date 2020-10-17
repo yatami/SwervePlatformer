@@ -23,7 +23,7 @@ public class PlayerCharacterController : Singleton<PlayerCharacterController>
     private float rotationLerper;
     private float startYRot;
     private bool gameHasStarted;
-
+    private bool shouldRotate;
 
     // Start is called before the first frame update
     void Start()
@@ -103,8 +103,8 @@ public class PlayerCharacterController : Singleton<PlayerCharacterController>
         }
 
      
-            transform.rotation = Quaternion.Euler(0, 30, 0);
-     
+          //  transform.rotation = Quaternion.Euler(0, 30, 0);
+        
     }
       
        
