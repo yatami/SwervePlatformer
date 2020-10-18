@@ -6,6 +6,7 @@ using UnityEngine.Networking;
 
 public class PaintController : Singleton<PaintController>
 {
+    public float percentage;
     
     [SerializeField] GameObject brush;
     [SerializeField] float brushSize = 0.1f;
@@ -73,6 +74,7 @@ public class PaintController : Singleton<PaintController>
                             }
                         }
                         Debug.Log(" %" + ((float)paintCounter / 899) * 100 + "  " + paintCounter);
+                        percentage = ((float)paintCounter / 899) * 100;
                     }
                 }
             }

@@ -27,7 +27,7 @@ public class AICharacterController : MonoBehaviour
 
     private void gameStarted()
     {
-        Debug.Log("Executed");
+       
         animRef.playIdleToRun();
         gameIsStarted = true;
         activateNavMesh();
@@ -36,7 +36,7 @@ public class AICharacterController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Debug.Log(navMeshRef.velocity);
+
     }
 
     private void FixedUpdate()

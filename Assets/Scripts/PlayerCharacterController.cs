@@ -6,7 +6,8 @@ using UnityEngine.Events;
 public class PlayerCharacterController : Singleton<PlayerCharacterController>
 {
     [HideInInspector] public UnityEvent startGame;
-
+    [HideInInspector] public UnityEvent endGame;
+    
     [SerializeField] float forwardSpeed = 10f;
     [SerializeField] float lerpSpeed = 5f;
     [SerializeField] float rotationLerpSpeed = 5f;
@@ -31,6 +32,10 @@ public class PlayerCharacterController : Singleton<PlayerCharacterController>
         if(startGame == null)
         {
             startGame = new UnityEvent();
+        }
+        if (endGame == null)
+        {
+            endGame = new UnityEvent();
         }
         swipeContRef = gameObject.GetComponent<SwipeController>();
         animationController = gameObject.GetComponent<AnimationController>();
@@ -115,6 +120,7 @@ public class PlayerCharacterController : Singleton<PlayerCharacterController>
         if(other.CompareTag("FinishLine"))
         {
             rb.isKinematic = true;
+            endGame.Invoke();
             paintContRef.activatePaintGame();
             animationController.playRunToStop();
             //play finish anim and show effects
