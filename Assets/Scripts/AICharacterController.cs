@@ -35,19 +35,24 @@ public class AICharacterController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+       
     }
 
     private void FixedUpdate()
     {
-       
+        
     }
     private void LateUpdate()
     {
-        if (gameIsStarted)
+        if (gameIsStarted && navMeshRef.desiredVelocity.x < 0.2f)
         {
             navMeshRef.velocity = new Vector3(navMeshRef.desiredVelocity.x, 0, navMeshRef.speed);
         }
+        else if(gameIsStarted && navMeshRef.desiredVelocity.x > 0.2f)
+        {
+            navMeshRef.velocity = new Vector3(navMeshRef.desiredVelocity.x, 0, navMeshRef.desiredVelocity.z);
+        }
+       
     }
 
     public void activateNavMesh()

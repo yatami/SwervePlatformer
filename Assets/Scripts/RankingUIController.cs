@@ -12,12 +12,15 @@ public class RankingUIController : MonoBehaviour
     GameObject playerRef;
     GameObject finish;
     List<Transform> racers;
+    Animator animRef;
 
     private int totalRacers = 0;
     private int playerRank = 1;
+    private int  prevRank = 1;
     // Start is called before the first frame update
     void Start()
     {
+        animRef = gameObject.GetComponent<Animator>();
         racers = new List<Transform>();
         finish = GameObject.FindGameObjectWithTag("FinishLine");
         int index = 0;
@@ -41,13 +44,19 @@ public class RankingUIController : MonoBehaviour
     void Update()
     {
         findPlayerRanking();
-        Debug.Log(racers[0].name);
         int index = 1;
+     
         foreach (Transform racer in racers)
         {
             if(racer.CompareTag("Player"))
             {
                 playerRank = index;
+                if(prevRank != playerRank)
+                {
+                    animRef.SetBool("shouldPlayRankUp", true);
+                    StartCoroutine(stopAnimAfterPlay());
+                }
+                prevRank = playerRank;
                 break;
             }
             index++;
@@ -56,6 +65,7 @@ public class RankingUIController : MonoBehaviour
         textRef.SetText(playerRank +  "/" + totalRacers);
     }
 
+ 
 
     private void findPlayerRanking()
     {
@@ -63,8 +73,13 @@ public class RankingUIController : MonoBehaviour
         {
             return Mathf.Abs(finish.transform.position.z - a.transform.position.z).CompareTo(Mathf.Abs(finish.transform.position.z - b.transform.position.z));
         });
-
-        
-           
     }
+
+    IEnumerator stopAnimAfterPlay()
+    {
+        yield return new WaitForSeconds(0.1f);
+        animRef.SetBool("shouldPlayRankUp", false);
+        yield break;
+    }
+
 }
