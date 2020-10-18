@@ -4,11 +4,13 @@ using UnityEngine;
 
 public class SwipeController : MonoBehaviour
 {
+   
+    [SerializeField] float threshHold = 4;
+    [HideInInspector] public float normalizedDistance;
+
     private Vector2 startPos;
     private Vector2 currentPos;
     private float inputDistance;
-    [SerializeField] float threshHold = 4;
-    [HideInInspector] public float normalizedDistance;
 
     private void Start()
     {

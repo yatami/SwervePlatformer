@@ -6,7 +6,7 @@ using UnityEngine.Networking;
 
 public class PaintController : Singleton<PaintController>
 {
-    public float percentage;
+    [HideInInspector] public float percentage;
     
     [SerializeField] GameObject brush;
     [SerializeField] float brushSize = 0.1f;

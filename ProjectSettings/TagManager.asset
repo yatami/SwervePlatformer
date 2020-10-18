@@ -10,6 +10,7 @@ TagManager:
   - Rotator
   - PelvisBone
   - AI
+  - TutorialUI
   layers:
   - Default
   - TransparentFX

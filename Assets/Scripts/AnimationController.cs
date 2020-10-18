@@ -10,11 +10,13 @@ public class AnimationController : MonoBehaviour
     Rigidbody rb;
 
     private bool canDie = true;
+    private RigidbodyConstraints previousConstraints;
     // Start is called before the first frame update
     void Start()
     {
         characterContRef = PlayerCharacterController.request();
         rb = gameObject.GetComponent<Rigidbody>();
+        previousConstraints = rb.constraints;
         animRef = gameObject.GetComponent<Animator>();
         respawnRef = gameObject.GetComponent<RespawnSystem>();
     }
@@ -34,6 +36,7 @@ public class AnimationController : MonoBehaviour
             respawnRef.respawnCharacter();
             stopRunAnim();
             animRef.SetBool("isDead", true);
+            freeRbConstraints();
             StartCoroutine(deathTriggerCooldown());
         }
     }
@@ -67,5 +70,16 @@ public class AnimationController : MonoBehaviour
     public void stopDeadAnim()
     {
         animRef.SetBool("isDead", false);
+        lockRbConstraints();
+    }
+
+    private void freeRbConstraints()
+    {
+        rb.constraints = RigidbodyConstraints.None;
+    }
+
+    private void lockRbConstraints()
+    {
+        rb.constraints = previousConstraints;
     }
 }

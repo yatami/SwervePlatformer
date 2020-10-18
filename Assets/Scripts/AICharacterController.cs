@@ -27,7 +27,6 @@ public class AICharacterController : MonoBehaviour
 
     private void gameStarted()
     {
-       
         animRef.playIdleToRun();
         gameIsStarted = true;
         activateNavMesh();
@@ -40,6 +39,10 @@ public class AICharacterController : MonoBehaviour
     }
 
     private void FixedUpdate()
+    {
+       
+    }
+    private void LateUpdate()
     {
         if (gameIsStarted)
         {

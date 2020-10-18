@@ -17,6 +17,7 @@ public class PlayerCharacterController : Singleton<PlayerCharacterController>
     PaintController paintContRef;
     SwipeController swipeContRef;
     AnimationController animationController;
+    GameObject tutorialUIRef;
 
     private Rigidbody rb;
     private float newXPos;
@@ -24,7 +25,7 @@ public class PlayerCharacterController : Singleton<PlayerCharacterController>
     private float rotationLerper;
     private float startYRot;
     private bool gameHasStarted;
-    private bool shouldRotate;
+   
 
     // Start is called before the first frame update
     void Start()
@@ -37,6 +38,7 @@ public class PlayerCharacterController : Singleton<PlayerCharacterController>
         {
             endGame = new UnityEvent();
         }
+        tutorialUIRef = GameObject.FindGameObjectWithTag("TutorialUI");
         swipeContRef = gameObject.GetComponent<SwipeController>();
         animationController = gameObject.GetComponent<AnimationController>();
         paintContRef = PaintController.request();
@@ -55,6 +57,7 @@ public class PlayerCharacterController : Singleton<PlayerCharacterController>
                 startGame.Invoke();
                 gameHasStarted = true;
                 animationController.playIdleToRun();
+                tutorialUIRef.SetActive(false);
             }
         }
 
@@ -131,11 +134,8 @@ public class PlayerCharacterController : Singleton<PlayerCharacterController>
 
     private void RotateCharacter(bool toRight, float rotator , float degree)
     {
-
         transform.rotation = Quaternion.Euler(0, Mathf.Lerp(startYRot, degree, rotator), 0);
-        /* Quaternion deltaRot = Quaternion.Euler(rb.rotation.x, Mathf.Lerp(startYRot, degree, rotator),rb.rotation.z);
-              rb.MoveRotation(rb.rotation * deltaRot);*/
-
-
     }
+
+  
 }

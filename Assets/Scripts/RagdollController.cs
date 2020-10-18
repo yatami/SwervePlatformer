@@ -20,7 +20,7 @@ public class RagdollController : MonoBehaviour
     private Vector3[] rigPos;
     private Vector3[] rigRot;
     private bool triggered;
-
+    
     // Start is called before the first frame update
     void Start()
     {
@@ -147,25 +147,25 @@ public class RagdollController : MonoBehaviour
         rigPos[0] = new Vector3(currentPos.x, gameObject.transform.position.y, currentPos.z);
 
         DOTween.Sequence()
-                 .Append(gameObject.transform.DORotate(rigRot[0], 2).SetEase(Ease.InSine));
+                 .Append(gameObject.transform.DORotate(rigRot[0], 1.6f).SetEase(Ease.InSine));
 
-        DOTween.Sequence().Join(gameObject.transform.DOMove(rigPos[0] , 2).SetEase(Ease.InSine));
+        DOTween.Sequence().Join(gameObject.transform.DOMove(rigPos[0] , 1.6f).SetEase(Ease.InSine));
 
         foreach (Transform tran in trans)
         {
             if(index != 0)
             {
-                DOTween.Sequence().Join(tran.DOMove(rigPos[index] + differenceInPos, 2).SetEase(Ease.InSine));
+                DOTween.Sequence().Join(tran.DOMove(rigPos[index] + differenceInPos, 1.6f).SetEase(Ease.InSine));
             }
             
             
-            DOTween.Sequence().Join(tran.DORotate(rigRot[index], 2).SetEase(Ease.InSine));
+            DOTween.Sequence().Join(tran.DORotate(rigRot[index], 1.6f).SetEase(Ease.InSine));
             index++;
         }
 
         // gameObject.transform.position = currentPos;
 
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(1.6f);
         triggered = false;
         deActivateRagdoll();
         yield break;
